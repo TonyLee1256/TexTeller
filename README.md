@@ -27,6 +27,9 @@ TexTeller was trained with ~~550K~~7.5M image-formula pairs (dataset available [
 * 📮[2024-03-25] TexTeller 2.0 released! The training data for TexTeller 2.0 has been increased to 7.5M (about **15 times more** than TexTeller 1.0 and also improved in data quality). The trained TexTeller 2.0 demonstrated **superior performance** in the test set, especially in recognizing rare symbols, complex multi-line formulas, and matrices.
     > [There](./assets/test.pdf) are more test images here and a horizontal comparison of recognition models from different companies.
 
+* 📮[2024-04-12] Trained a **formula detection model**, thereby enhancing the capability to detect and recognize formulas in entire documents (whole-image inference)!
+
+
 ## 🔑 Prerequisites
 
 python=3.10
@@ -78,6 +81,40 @@ Enter `http://localhost:8501` in a browser to view the web demo.
 
 > [!NOTE]
 > If you are Windows user, please run the `start_web.bat` file instead.
+
+## 🧠 Full Image Inference
+
+TexTeller also supports **formula detection and recognition** on full images, allowing for the detection of formulas throughout the image, followed by batch recognition of the formulas.
+
+### Download Weights
+
+English documentation formula detection [[link](https://huggingface.co/TonyLee1256/texteller_det/resolve/main/rtdetr_r50vd_6x_coco_trained_on_IBEM_en_papers.onnx?download=true)]: Trained on 8272 images from the [IBEM dataset](https://zenodo.org/records/4757865).
+
+Chinese documentation formula detection [[link](https://huggingface.co/TonyLee1256/texteller_det/blob/main/rtdetr_r50vd_6x_coco_trained_on_cn_textbook.onnx)]: Trained on 2560 Chinese textbook images (100+ layouts).
+
+### Formula Detection
+
+Run the following command in the `TexTeller/src` directory:
+
+```bash
+python infer_det.py
+```
+
+Detects all formulas in the full image, and the results are saved in `TexTeller/src/subimages`.
+
+<div align="center">
+    <img src="./assets/det_rec.png" width=400> 
+</div>
+
+### Batch Formula Recognition
+
+After **formula detection**, run the following command in the `TexTeller/src` directory:
+
+```shell
+rec_infer_from_crop_imgs.py
+```
+
+This will use the results of the previous formula detection to perform batch recognition on all cropped formulas, saving the recognition results as txt files in `TexTeller/src/results`.
 
 ## 📡 API Usage
 
